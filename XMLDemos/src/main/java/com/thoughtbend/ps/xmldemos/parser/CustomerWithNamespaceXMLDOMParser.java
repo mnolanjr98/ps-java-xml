@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.thoughtbend.ps.xmldemos.data.Address;
 import com.thoughtbend.ps.xmldemos.data.Customer;
 
 public class CustomerWithNamespaceXMLDOMParser {
@@ -60,8 +61,7 @@ public class CustomerWithNamespaceXMLDOMParser {
 				
 				Element dataElement = (Element) dataNode;
 				boolean noMatch = false;
-				// switch (dataElement.getLocalName()) {
-				switch (dataElement.getTagName()) {
+				switch (dataElement.getLocalName()) {
 				case "id" : 
 					newCustomer.setId(Long.parseLong(dataElement.getTextContent()));
 					break;
@@ -74,8 +74,6 @@ public class CustomerWithNamespaceXMLDOMParser {
 				case "email" :
 					newCustomer.setEmailAddress(dataElement.getTextContent());
 					break;
-				case "addresses" :
-					break;
 				default:
 					noMatch = true;
 					break;
@@ -85,7 +83,16 @@ public class CustomerWithNamespaceXMLDOMParser {
 					// These elements are in a different name space, so we need to include that in our checks
 					if ("http://www.thoughtbend.com/addr/v2".equals(dataElement.getNamespaceURI()) && 
 							"addresses".equals(dataElement.getLocalName())) {
-						System.out.println("Customer has addresses");
+						
+						newCustomer.setAddresses(new ArrayList<>());
+						
+						NodeList addressNodeList = dataElement.getChildNodes();
+						for (int addressIndex = 0; addressIndex < addressNodeList.getLength(); ++addressIndex) {
+							Node addressNode = addressNodeList.item(addressIndex);
+							if (addressNode instanceof Element && "address".equals(addressNode.getLocalName())) {
+								newCustomer.getAddresses().add(buildAddressFromNode(addressNode));
+							}
+						}
 					}
 					noMatch = false;
 				}
@@ -93,6 +100,40 @@ public class CustomerWithNamespaceXMLDOMParser {
 		}
 		
 		return newCustomer;
+	}
+	
+	private static Address buildAddressFromNode(Node addressNode) {
+		
+		Address address = new Address();
+		NodeList addressDataNodeList = addressNode.getChildNodes();
+		
+		for (int addressDataIndex = 0; addressDataIndex < addressDataNodeList.getLength(); ++addressDataIndex) {
+			
+			Node dataNode = addressDataNodeList.item(addressDataIndex);
+			if (dataNode instanceof Element) {
+				
+				Element dataElement = (Element) dataNode;
+				switch(dataElement.getLocalName()) {
+				case "type":
+					address.setAddressType(dataElement.getTextContent());
+					break;
+				case "street":
+					address.setStreet1(dataElement.getTextContent());
+					break;
+				case "city":
+					address.setCity(dataElement.getTextContent());
+					break;
+				case "state":
+					address.setState(dataElement.getTextContent());
+					break;
+				case "zip":
+					address.setZip(dataElement.getTextContent());
+					break;
+				}
+			}
+		}
+		
+		return address;
 	}
 
 }
