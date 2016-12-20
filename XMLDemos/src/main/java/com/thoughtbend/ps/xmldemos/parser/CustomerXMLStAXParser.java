@@ -9,6 +9,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import com.thoughtbend.ps.xmldemos.data.Address;
 import com.thoughtbend.ps.xmldemos.data.Customer;
 import com.thoughtbend.ps.xmldemos.parser.sax.Const;
 
@@ -70,6 +71,15 @@ public class CustomerXMLStAXParser {
 					break;
 				}
 			}
+			else if (reader.isStartElement() && Const.Namespace.ADDRESS.equals(reader.getNamespaceURI())) {
+				
+				if ("addresses".equals(reader.getLocalName())) {
+					customer.setAddresses(new ArrayList<>());
+				}
+				else if ("address".equals(reader.getLocalName())) {
+					customer.getAddresses().add(processAddress(reader));
+				}
+			}
 			// When we hit the end element, we want to break and return - the next customer 
 			// start will re-enter this method
 			else if (reader.isEndElement() && Const.Namespace.CUSTOMER.equals(reader.getNamespaceURI()) &&
@@ -79,5 +89,45 @@ public class CustomerXMLStAXParser {
 		}
 		
 		return customer;
+	}
+	
+	private static Address processAddress(final XMLStreamReader reader) throws XMLStreamException {
+		
+		final Address address = new Address();
+		
+		while (reader.hasNext()) {
+			
+			reader.next();
+			
+			if (reader.isStartElement() && Const.Namespace.ADDRESS.equals(reader.getNamespaceURI())) {
+				
+				String localName = reader.getLocalName();
+				reader.next();
+				
+				switch (localName) {
+				case "type":
+					address.setAddressType(reader.getText());
+					break;
+				case "street":
+					address.setStreet1(reader.getText());
+					break;
+				case "city":
+					address.setCity(reader.getText());
+					break;
+				case "state":
+					address.setState(reader.getText());
+					break;
+				case "zip":
+					address.setZip(reader.getText());
+					break;
+				}
+			}
+			else if (reader.isEndElement() && Const.Namespace.ADDRESS.equals(reader.getNamespaceURI()) &&
+				"address".equals(reader.getLocalName())) {
+				break;
+			}
+		}
+		
+		return address;
 	}
 }
