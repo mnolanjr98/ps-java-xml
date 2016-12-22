@@ -40,7 +40,7 @@ public class CustomerXMLEventAPIWithFilterParser {
 					String characters = (isCharacterElement) ? event.asCharacters().getData().trim() : "";
 					boolean hasEmptyText = (characters == null || "".equals(characters));
 					
-					boolean accept = (event.isStartElement()) || 
+					boolean accept = (event.isStartElement() && !"customers".equals(event.asStartElement().getName().getLocalPart())) || 
 							(isEndElement && (isEndCustomer || isEndAddress))||
 							(isCharacterElement && !hasEmptyText);
 					
@@ -65,9 +65,6 @@ public class CustomerXMLEventAPIWithFilterParser {
 						"customer".equals(qName.getLocalPart())) {
 						
 						customerList.add(processCustomer(eventReader));
-					}
-					else {
-						eventReader.nextEvent();
 					}
 				}
 			}
@@ -140,14 +137,9 @@ public class CustomerXMLEventAPIWithFilterParser {
 		
 			XMLEvent currentEvent = eventReader.nextEvent();
 			
-			/*if (!currentEvent.isStartElement()) {*/
-				if (currentEvent.isEndElement() && "address".equals(currentEvent.asEndElement().getName().getLocalPart())) {
-					break;
-				}
-				/*else {
-					continue;
-				}
-			}*/
+			if (currentEvent.isEndElement() && "address".equals(currentEvent.asEndElement().getName().getLocalPart())) {
+				break;
+			}
 			
 			StartElement startElement = currentEvent.asStartElement();
 			QName elementName = startElement.getName();
