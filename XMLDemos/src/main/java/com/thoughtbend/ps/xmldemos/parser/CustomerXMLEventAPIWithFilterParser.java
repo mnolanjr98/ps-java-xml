@@ -30,6 +30,9 @@ public class CustomerXMLEventAPIWithFilterParser {
 				public boolean accept(XMLEvent event) {
 					
 					boolean isEndElement = event.isEndElement();
+					
+					// We are accepting the ending tags for the core entities being processed as these
+					// help trigger instantiation of new objects / breaking loops of fields for objects
 					boolean isEndCustomer = (isEndElement && "customer".equals(event.asEndElement().getName().getLocalPart()));
 					boolean isEndAddress = (isEndElement && "address".equals(event.asEndElement().getName().getLocalPart()));
 					
@@ -37,7 +40,7 @@ public class CustomerXMLEventAPIWithFilterParser {
 					String characters = (isCharacterElement) ? event.asCharacters().getData().trim() : "";
 					boolean hasEmptyText = (characters == null || "".equals(characters));
 					
-					boolean accept = event.isStartElement() || 
+					boolean accept = (event.isStartElement()) || 
 							(isEndElement && (isEndCustomer || isEndAddress))||
 							(isCharacterElement && !hasEmptyText);
 					
@@ -67,10 +70,6 @@ public class CustomerXMLEventAPIWithFilterParser {
 						eventReader.nextEvent();
 					}
 				}
-				else {
-					eventReader.nextEvent();
-				}
-				
 			}
 			
 			for (Customer customer : customerList) {
@@ -91,17 +90,11 @@ public class CustomerXMLEventAPIWithFilterParser {
 		while (eventReader.hasNext()) {
 			
 			XMLEvent currentEvent = eventReader.nextEvent();
-			
-			//if (!currentEvent.isStartElement() ) {
 				
-				if (currentEvent.isEndElement() &&
-						"customer".equals(currentEvent.asEndElement().getName().getLocalPart())) {
-					break;
-				}
-				/*else {
-					continue;
-				}
-			}*/
+			if (currentEvent.isEndElement() &&
+					"customer".equals(currentEvent.asEndElement().getName().getLocalPart())) {
+				break;
+			}
 
 			StartElement customerFieldElement = currentEvent.asStartElement();
 			QName fieldName = customerFieldElement.getName();
