@@ -24,8 +24,8 @@ public class CustomerXMLStAXParser {
 
 	public static void main(String[] args) {
 		
-		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace-bad-address-type.xml");
-			 InputStream dataValidationInputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace-bad-address-type.xml")) {
+		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml");
+			 InputStream dataValidationInputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml")) {
 			
 			InputStream schemaStream = ClassLoader.getSystemResourceAsStream("./customer.xsd");
 			StreamSource schemaSource = new StreamSource(schemaStream);
