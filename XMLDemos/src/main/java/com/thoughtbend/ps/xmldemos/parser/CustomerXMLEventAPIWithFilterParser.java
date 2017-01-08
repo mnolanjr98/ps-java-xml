@@ -41,7 +41,7 @@ public class CustomerXMLEventAPIWithFilterParser {
 					boolean hasEmptyText = (characters == null || "".equals(characters));
 					
 					boolean accept = (event.isStartElement() && !"customers".equals(event.asStartElement().getName().getLocalPart())) || 
-							(isEndElement && (isEndCustomer || isEndAddress))||
+							(isEndElement && (isEndCustomer || isEndAddress)) ||
 							(isCharacterElement && !hasEmptyText);
 					
 					return accept;
