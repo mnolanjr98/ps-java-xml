@@ -24,8 +24,8 @@ public class CustomerXMLStAXParser {
 
 	public static void main(String[] args) {
 		
-		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml");
-			 InputStream dataValidationInputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml")) {
+		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace-bad-id-value.xml");
+			 InputStream dataValidationInputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace-bad-id-value.xml")) {
 			
 			InputStream schemaStream = ClassLoader.getSystemResourceAsStream("./customer.xsd");
 			StreamSource schemaSource = new StreamSource(schemaStream);
@@ -65,7 +65,8 @@ public class CustomerXMLStAXParser {
 		
 		final Customer customer = new Customer();
 		// We need to read the Id (and any attribute) up here instead of in the element parsing
-		customer.setId(Long.parseLong(reader.getAttributeValue(Const.Namespace.CUSTOMER, "id")));
+		String idValue = reader.getAttributeValue(null, "id");
+		customer.setId(Long.parseLong(idValue));
 		
 		while (reader.hasNext()) {
 			

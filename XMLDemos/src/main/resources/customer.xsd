@@ -25,7 +25,7 @@
 				</complexType>
 			</element>
 		</sequence>
-		<attribute name="id" type="long" use="required" />
+		<attribute name="id" type="cust:customerId" use="required" />
 	</complexType>
 	
 	<complexType name="Address">
@@ -37,5 +37,12 @@
 			<element name="zip" type="string" />
 		</sequence>
 	</complexType>
+	
+	<simpleType name="customerId">
+		<restriction base="long">
+			<minInclusive value="100" />
+			<maxInclusive value="999" />
+		</restriction>
+	</simpleType>
 
 </schema>
