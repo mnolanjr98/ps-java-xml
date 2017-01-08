@@ -30,7 +30,7 @@
 	
 	<complexType name="Address">
 		<sequence>
-			<element name="type" type="string" />
+			<element name="type" type="cust:addressType" />
 			<element name="street" type="string" />
 			<element name="city" type="string" />
 			<element name="state" type="string" />
@@ -42,6 +42,13 @@
 		<restriction base="long">
 			<minInclusive value="100" />
 			<maxInclusive value="999" />
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="addressType">
+		<restriction base="string">
+			<enumeration value="HOME" />
+			<enumeration value="OFFICE" />
 		</restriction>
 	</simpleType>
 
