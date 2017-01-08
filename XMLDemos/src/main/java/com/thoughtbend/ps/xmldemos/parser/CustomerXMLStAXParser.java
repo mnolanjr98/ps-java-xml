@@ -8,6 +8,13 @@ import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stax.StAXSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
+import org.xml.sax.SAXException;
 
 import com.thoughtbend.ps.xmldemos.data.Address;
 import com.thoughtbend.ps.xmldemos.data.Customer;
@@ -17,10 +24,20 @@ public class CustomerXMLStAXParser {
 
 	public static void main(String[] args) {
 		
-		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers.xml")) {
+		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml");
+			 InputStream dataValidationInputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml")) {
+			
+			InputStream schemaStream = ClassLoader.getSystemResourceAsStream("./customer.xsd");
+			StreamSource schemaSource = new StreamSource(schemaStream);
+			SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+			Schema schema = schemaFactory.newSchema(schemaSource);
+			
 			
 			XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 			XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream);
+			
+			StAXSource validationSource = new StAXSource(inputFactory.createXMLStreamReader(dataValidationInputStream));
+			schema.newValidator().validate(validationSource);
 			
 			List<Customer> customerList = new ArrayList<>();
 			
@@ -28,7 +45,6 @@ public class CustomerXMLStAXParser {
 				
 				if (reader.isStartElement() && Const.Namespace.CUSTOMER.equals(reader.getNamespaceURI()) && 
 						"customer".equals(reader.getLocalName())) {
-					
 					customerList.add(processCustomer(reader));
 				}
 				else {
@@ -40,7 +56,7 @@ public class CustomerXMLStAXParser {
 				ObjectPrinter.printCustomer(currentCustomer);
 			}
 		}
-		catch (IOException | XMLStreamException ex) {
+		catch (IOException | XMLStreamException | SAXException ex) {
 			ex.printStackTrace(System.err);
 		}
 	}
@@ -48,6 +64,8 @@ public class CustomerXMLStAXParser {
 	private static Customer processCustomer(final XMLStreamReader reader) throws XMLStreamException {
 		
 		final Customer customer = new Customer();
+		// We need to read the Id (and any attribute) up here instead of in the element parsing
+		customer.setId(Long.parseLong(reader.getAttributeValue(Const.Namespace.CUSTOMER, "id")));
 		
 		while (reader.hasNext()) {
 			
@@ -57,9 +75,6 @@ public class CustomerXMLStAXParser {
 				String localName = reader.getLocalName();
 				reader.next();
 				switch (localName) {
-				case "id":
-					customer.setId(Long.parseLong(reader.getText()));
-					break;
 				case "firstName":
 					customer.setFirstName(reader.getText());
 					break;
@@ -71,7 +86,7 @@ public class CustomerXMLStAXParser {
 					break;
 				}
 			}
-			else if (reader.isStartElement() && Const.Namespace.ADDRESS.equals(reader.getNamespaceURI())) {
+			else if (reader.isStartElement() && Const.Namespace.CUSTOMER.equals(reader.getNamespaceURI())) {
 				
 				if ("addresses".equals(reader.getLocalName())) {
 					customer.setAddresses(new ArrayList<>());
@@ -99,7 +114,7 @@ public class CustomerXMLStAXParser {
 			
 			reader.next();
 			
-			if (reader.isStartElement() && Const.Namespace.ADDRESS.equals(reader.getNamespaceURI())) {
+			if (reader.isStartElement() && Const.Namespace.CUSTOMER.equals(reader.getNamespaceURI())) {
 				
 				String localName = reader.getLocalName();
 				reader.next();
