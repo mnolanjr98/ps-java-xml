@@ -4,7 +4,7 @@
 		<tbc:firstName>Mary</tbc:firstName>
 		<tbc:lastName>Nolan</tbc:lastName>
 		<tbc:email>marynolan@thoughtbend.com</tbc:email>
-		<tba:addresses xmlns:tba="http://www.thoughtbend.com/addr/v2">
+		<tba:addresses xmlns:tba="http://www.thoughtbend.com/addr/v1">
 			<tba:address>
 				<tba:type>HOME</tba:type>
 				<tba:street>123 Acme Dr</tba:street>
