@@ -3,6 +3,9 @@ package com.thoughtbend.ps.xmldemos.writer;
 import static com.thoughtbend.ps.xmldemos.parser.sax.Const.Namespace.ADDRESS;
 import static com.thoughtbend.ps.xmldemos.parser.sax.Const.Namespace.CUSTOMER;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +31,7 @@ public class CustomerXMLDOMWriter {
 		CustomerDataFactory dataFactory = new CustomerDataFactory();
 		List<Customer> customerList = dataFactory.buildCustomers();
 		
-		try {
+		try (FileOutputStream fos = new FileOutputStream("./dom-xml-output.xml")) {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(true);
 			
@@ -49,9 +52,10 @@ public class CustomerXMLDOMWriter {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			
-			transformer.transform(source, new StreamResult(System.out));
+			//transformer.transform(source, new StreamResult(System.out));
+			transformer.transform(source, new StreamResult(fos));
 		}
-		catch (ParserConfigurationException | TransformerException ex) {
+		catch (ParserConfigurationException | TransformerException | IOException ex) {
 			ex.printStackTrace(System.err);
 		}
 	}
@@ -61,8 +65,9 @@ public class CustomerXMLDOMWriter {
 		DocumentFragment documentFragment = document.createDocumentFragment();
 		
 		Element customerElement = document.createElementNS(CUSTOMER, "customer");
+		customerElement.setAttribute("id", customer.getId().toString());
 		
-		customerElement.appendChild(createTextElement(document, CUSTOMER, "id", null, customer.getId().toString()));
+		//customerElement.appendChild(createTextElement(document, CUSTOMER, "id", null, customer.getId().toString()));
 		customerElement.appendChild(createTextElement(document, CUSTOMER, "firstName", null, customer.getFirstName()));
 		customerElement.appendChild(createTextElement(document, CUSTOMER, "lastName", null, customer.getLastName()));
 		customerElement.appendChild(createTextElement(document, CUSTOMER, "email", null, customer.getEmailAddress()));
@@ -86,15 +91,18 @@ public class CustomerXMLDOMWriter {
 	
 	private static DocumentFragment buildAddressFragment(Document document, Address address) {
 		
-		DocumentFragment documentFragment = document.createDocumentFragment();
+		DocumentFragment addressFragment = document.createDocumentFragment();
+		Element addressElement = document.createElementNS(ADDRESS, "address");
 		
-		documentFragment.appendChild(createTextElement(document, ADDRESS, "type", "tba", address.getAddressType()));
-		documentFragment.appendChild(createTextElement(document, ADDRESS, "street", "tba", address.getStreet1()));
-		documentFragment.appendChild(createTextElement(document, ADDRESS, "city", "tba", address.getCity()));
-		documentFragment.appendChild(createTextElement(document, ADDRESS, "state", "tba", address.getState()));
-		documentFragment.appendChild(createTextElement(document, ADDRESS, "zip", "tba", address.getZip()));
+		addressElement.appendChild(createTextElement(document, ADDRESS, "type", "tba", address.getAddressType()));
+		addressElement.appendChild(createTextElement(document, ADDRESS, "street", "tba", address.getStreet1()));
+		addressElement.appendChild(createTextElement(document, ADDRESS, "city", "tba", address.getCity()));
+		addressElement.appendChild(createTextElement(document, ADDRESS, "state", "tba", address.getState()));
+		addressElement.appendChild(createTextElement(document, ADDRESS, "zip", "tba", address.getZip()));
 		
-		return documentFragment;
+		addressFragment.appendChild(addressElement);
+		
+		return addressFragment;
 	}
 	
 	private static Element createTextElement(final Document document, final String namespace, final String localName,
