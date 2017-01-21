@@ -20,12 +20,12 @@ public class CustomerXMLStAXWriter {
 
 		List<Customer> customerList = new CustomerDataFactory().buildCustomers();
 		
-		try (FileOutputStream fis = new FileOutputStream("./stax-xml-output.xml")) {
+		try (FileOutputStream fos = new FileOutputStream("./stax-xml-output.xml")) {
 			;
 			XMLOutputFactory factory = XMLOutputFactory.newFactory();
 			factory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
 			//XMLStreamWriter writer = factory.createXMLStreamWriter(System.out);
-			XMLStreamWriter writer = factory.createXMLStreamWriter(fis);
+			XMLStreamWriter writer = factory.createXMLStreamWriter(fos);
 			
 			writer.writeStartDocument();
 			writer.setPrefix("tbc", CUSTOMER);
