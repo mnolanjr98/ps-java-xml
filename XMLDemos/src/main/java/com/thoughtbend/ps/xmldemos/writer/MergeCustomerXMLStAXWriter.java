@@ -29,7 +29,8 @@ public class MergeCustomerXMLStAXWriter {
 			
 			XMLEventFactory outputEventFactory = XMLEventFactory.newFactory();
 			
-			XMLEventWriter mergedCustomerEventWriter = XMLOutputFactory.newFactory().createXMLEventWriter(System.out);
+			//XMLEventWriter mergedCustomerEventWriter = XMLOutputFactory.newFactory().createXMLEventWriter(System.out);
+			XMLEventWriter mergedCustomerEventWriter = XMLOutputFactory.newFactory().createXMLEventWriter(fos);
 			
 			XMLEvent rootDocumentElement = outputEventFactory.createStartDocument();
 			mergedCustomerEventWriter.add(rootDocumentElement);

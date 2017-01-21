@@ -17,7 +17,7 @@ public class CustomerXMLStAXParser {
 
 	public static void main(String[] args) {
 		
-		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers.xml")) {
+		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./merged-customers.xml")) {
 			
 			XMLInputFactory inputFactory = XMLInputFactory.newFactory();
 			XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream);
@@ -48,6 +48,7 @@ public class CustomerXMLStAXParser {
 	private static Customer processCustomer(final XMLStreamReader reader) throws XMLStreamException {
 		
 		final Customer customer = new Customer();
+		customer.setId(Long.parseLong(reader.getAttributeValue(null, "id")));
 		
 		while (reader.hasNext()) {
 			
@@ -57,9 +58,9 @@ public class CustomerXMLStAXParser {
 				String localName = reader.getLocalName();
 				reader.next();
 				switch (localName) {
-				case "id":
+				/*case "id":
 					customer.setId(Long.parseLong(reader.getText()));
-					break;
+					break;*/
 				case "firstName":
 					customer.setFirstName(reader.getText());
 					break;
