@@ -3,6 +3,8 @@ package com.thoughtbend.ps.xmldemos.writer;
 import static com.thoughtbend.ps.xmldemos.parser.sax.Const.Namespace.ADDRESS;
 import static com.thoughtbend.ps.xmldemos.parser.sax.Const.Namespace.CUSTOMER;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -18,10 +20,12 @@ public class CustomerXMLStAXWriter {
 
 		List<Customer> customerList = new CustomerDataFactory().buildCustomers();
 		
-		try {
-			
+		try (FileOutputStream fis = new FileOutputStream("./stax-xml-output.xml")) {
+			;
 			XMLOutputFactory factory = XMLOutputFactory.newFactory();
-			XMLStreamWriter writer = factory.createXMLStreamWriter(System.out);
+			factory.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
+			//XMLStreamWriter writer = factory.createXMLStreamWriter(System.out);
+			XMLStreamWriter writer = factory.createXMLStreamWriter(fis);
 			
 			writer.writeStartDocument();
 			writer.setPrefix("tbc", CUSTOMER);
@@ -34,14 +38,15 @@ public class CustomerXMLStAXWriter {
 			writer.writeEndElement();
 			writer.writeEndDocument();
 			writer.flush();
-		} catch (XMLStreamException ex) {
+		} catch (XMLStreamException | IOException ex) {
 			ex.printStackTrace(System.err);
 		}
 	}
 
 	private static void buildCustomer(XMLStreamWriter writer, Customer customer) throws XMLStreamException {
 		
-		buildTextElement(writer, CUSTOMER, "id", customer.getId().toString());
+		writer.writeStartElement(CUSTOMER, "customer");
+		writer.writeAttribute("id", customer.getId().toString());
 		buildTextElement(writer, CUSTOMER, "firstName", customer.getFirstName());
 		buildTextElement(writer, CUSTOMER, "lastName", customer.getLastName());
 		buildTextElement(writer, CUSTOMER, "email", customer.getEmailAddress());
@@ -59,15 +64,18 @@ public class CustomerXMLStAXWriter {
 			
 			writer.writeEndElement();
 		}
+		writer.writeEndElement();
 	}
 	
 	private static void buildAddress(XMLStreamWriter writer, Address address) throws XMLStreamException {
 		
+		writer.writeStartElement(ADDRESS, "address");
 		buildTextElement(writer, ADDRESS, "type", address.getAddressType());
 		buildTextElement(writer, ADDRESS, "street", address.getStreet1());
 		buildTextElement(writer, ADDRESS, "city", address.getCity());
 		buildTextElement(writer, ADDRESS, "state", address.getState());
 		buildTextElement(writer, ADDRESS, "zip", address.getZip());
+		writer.writeEndElement();
 	}
 
 	private static void buildTextElement(XMLStreamWriter writer, String namespace, String localName, String value)
