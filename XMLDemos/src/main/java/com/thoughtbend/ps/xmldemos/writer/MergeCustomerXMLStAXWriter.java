@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.xml.stream.XMLEventFactory;
+import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
@@ -30,7 +32,10 @@ public class MergeCustomerXMLStAXWriter {
 			XMLEvent customersStartElement = outputEventFactory.createStartElement("tbc", CUSTOMER, "customers");
 			mergedCustomerEventWriter.add(customersStartElement);
 			
-			XMLEvent customersEndElement = outputEventFactory.createEndElement("tbc", CUSTOMER,"customers");
+			filterCustomersDocAndWrite(mergedCustomerEventWriter, xmlStream1);
+			filterCustomersDocAndWrite(mergedCustomerEventWriter, xmlStream2);
+			
+			XMLEvent customersEndElement = outputEventFactory.createEndElement("tbc", CUSTOMER, "customers");
 			mergedCustomerEventWriter.add(customersEndElement);
 			
 			mergedCustomerEventWriter.flush();
@@ -39,6 +44,15 @@ public class MergeCustomerXMLStAXWriter {
 		catch (IOException | XMLStreamException ex) {
 			ex.printStackTrace(System.err);
 		}
+	}
+	
+	private static void filterCustomersDocAndWrite(XMLEventWriter mergedCustomerEventWriter, InputStream xmlStream) throws XMLStreamException {
+		
+		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+		XMLEventReader eventReader = inputFactory.createXMLEventReader(xmlStream);
+		
+		mergedCustomerEventWriter.add(eventReader);
+		mergedCustomerEventWriter.flush();
 	}
 
 }
