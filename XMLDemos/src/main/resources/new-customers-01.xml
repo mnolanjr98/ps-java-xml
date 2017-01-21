@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tbc:customers xmlns:tbc="http://www.thoughtbend.com/customer/v1">
+	<tbc:customer id="123">
+		<tbc:firstName>Mike</tbc:firstName>
+		<tbc:lastName>Nolan</tbc:lastName>
+		<tbc:email>mnolan@thoughtbend.com</tbc:email>
+		<tba:addresses xmlns:tba="http://www.thoughtbend.com/addr/v2">
+			<tba:address>
+				<tba:type>HOME</tba:type>
+				<tba:street>123 Acme Dr</tba:street>
+				<tba:city>Somewhere</tba:city>
+				<tba:state>IL</tba:state>
+				<tba:zip>60000</tba:zip>
+			</tba:address>
+			<tba:address>
+				<tba:type>OFFICE</tba:type>
+				<tba:street>456 Acme Way</tba:street>
+				<tba:city>Somewhere Else</tba:city>
+				<tba:state>IL</tba:state>
+				<tba:zip>60001</tba:zip>
+			</tba:address>
+		</tba:addresses>
+	</tbc:customer>
+	<tbc:customer id="124">
+		<tbc:firstName>Jim</tbc:firstName>
+		<tbc:lastName>Jones</tbc:lastName>
+		<tbc:email>jjones@psdemo.com</tbc:email>
+	</tbc:customer>
+</tbc:customers>
