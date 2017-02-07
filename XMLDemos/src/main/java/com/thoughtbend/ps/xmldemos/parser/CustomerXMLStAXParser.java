@@ -27,7 +27,7 @@ public class CustomerXMLStAXParser {
 		try (final InputStream inputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml");
 			 InputStream dataValidationInputStream = ClassLoader.getSystemResourceAsStream("./new-customers-single-namespace.xml")) {
 			
-			InputStream schemaStream = ClassLoader.getSystemResourceAsStream("./customer.xsd");
+			InputStream schemaStream = ClassLoader.getSystemResourceAsStream("./customer-elementonly.xsd");
 			StreamSource schemaSource = new StreamSource(schemaStream);
 			SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 			Schema schema = schemaFactory.newSchema(schemaSource);
