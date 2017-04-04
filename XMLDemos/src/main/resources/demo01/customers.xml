@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<customer id="123">
+		<firstName>Mike</firstName>
+		<lastName>Nolan</lastName>
+		<email>mnolan@thoughtbend.com</email>
+		<addresses>
+			<address>
+				<type>HOME</type>
+				<street>123 Acme Dr</street>
+				<city>Somewhere</city>
+				<state>IL</state>
+				<zip>60000</zip>
+			</address>
+			<address>
+				<type>OFFICE</type>
+				<street>456 Acme Way</street>
+				<city>Somewhere Else</city>
+				<state>IL</state>
+				<zip>60001</zip>
+			</address>
+		</addresses>
+	</customer>
+	<customer id="124">
+		<firstName>Jim</firstName>
+		<lastName>Jones</lastName>
+		<email>jjones@psdemo.com</email>
+	</customer>
+	<customer id="125">
+		<firstName>Joe</firstName>
+		<lastName>Jones</lastName>
+		<email xsi:nil="true" />
+	</customer>
+</customers>

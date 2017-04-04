@@ -81,7 +81,7 @@ public class CustomerWithNamespaceXMLDOMParser {
 				
 				if (noMatch) {
 					// These elements are in a different name space, so we need to include that in our checks
-					if ("http://www.thoughtbend.com/addr/v2".equals(dataElement.getNamespaceURI()) && 
+					if ("http://www.thoughtbend.com/addr/v1".equals(dataElement.getNamespaceURI()) && 
 							"addresses".equals(dataElement.getLocalName())) {
 						
 						newCustomer.setAddresses(new ArrayList<>());
