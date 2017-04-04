@@ -1,5 +1,8 @@
 package com.thoughtbend.ps.xmldemos.parser.validation;
 
+import static com.thoughtbend.ps.xmldemos.data.Const.Namespace.ADDRESS;
+import static com.thoughtbend.ps.xmldemos.data.Const.Namespace.CUSTOMER;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,7 +14,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.SchemaFactoryLoader;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -19,25 +21,23 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import com.thoughtbend.ps.xmldemos.data.Address;
 import com.thoughtbend.ps.xmldemos.data.Customer;
 import com.thoughtbend.ps.xmldemos.parser.ObjectPrinter;
 
-public class CustomerNoNamespaceDOMParser {
+public class CustomerWithMultipleNamespacesDOMParser {
 
 	public static void main(String[] args) {
 		
-		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./demo01/customers.xml")) {
+		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./demo02/customers.xml")) {
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(true);
 			
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = schemaFactory.newSchema(ClassLoader.getSystemResource("./demo01/customer.xsd"));
+			Schema schema = schemaFactory.newSchema(ClassLoader.getSystemResource("./demo02/customer.xsd"));
 			
 			factory.setSchema(schema);
 			//factory.setValidating(true);
@@ -53,10 +53,10 @@ public class CustomerNoNamespaceDOMParser {
 				System.exit(-1);
 			}
 			
-			NodeList customerNodeList = document.getElementsByTagName("customer");
+			NodeList customerNodeList = document.getElementsByTagNameNS(CUSTOMER, "customer");
 			List<Customer> customerList = new ArrayList<>();
 			
-			for (int customerIndex = 0; customerIndex < customerNodeList.getLength(); ++customerIndex) {
+			for (int customerIndex = 0; customerIndex < customerNodeList.getLength(); customerIndex++) {
 				
 				Node currentCustomerNode = customerNodeList.item(customerIndex);
 				customerList.add(buildCustomerFromNode(currentCustomerNode));
@@ -88,8 +88,11 @@ public class CustomerNoNamespaceDOMParser {
 				
 				Element dataElement = (Element) dataNode;
 				boolean noMatch = false;
-				switch (dataElement.getTagName()) {
-
+				switch (dataElement.getLocalName()) {
+				/*case "id" :
+					Long idValue = Long.parseLong(dataElement.getTextContent());
+					newCustomer.setId(idValue);
+					break;*/
 				case "firstName" :
 					newCustomer.setFirstName(dataElement.getTextContent());
 					break;
@@ -106,7 +109,8 @@ public class CustomerNoNamespaceDOMParser {
 				
 				if (noMatch) {
 					
-					if ("addresses".equals(dataElement.getTagName())) {
+					if (ADDRESS.equals(dataElement.getNamespaceURI()) && 
+							"addresses".equals(dataElement.getLocalName())) {
 						
 						newCustomer.setAddresses(new ArrayList<>());
 						
@@ -117,7 +121,8 @@ public class CustomerNoNamespaceDOMParser {
 							if (addressNode instanceof Element) {
 								
 								Element addressElement = (Element) addressNode;
-								if ("address".equals(addressElement.getTagName())) {
+								if (ADDRESS.equals(dataElement.getNamespaceURI()) && 
+										"address".equals(addressElement.getLocalName())) {
 									
 									newCustomer.getAddresses().add(buildAddressFromNode(addressElement));
 								}
@@ -143,7 +148,7 @@ public class CustomerNoNamespaceDOMParser {
 			if (dataNode instanceof Element) {
 				
 				Element dataElement = (Element) dataNode;
-				switch(dataElement.getTagName()) {
+				switch(dataElement.getLocalName()) {
 				case "type" :
 					address.setAddressType(dataElement.getTextContent());
 					break;

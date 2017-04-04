@@ -1,6 +1,5 @@
 package com.thoughtbend.ps.xmldemos.parser.validation;
 
-import static com.thoughtbend.ps.xmldemos.data.Const.Namespace.ADDRESS;
 import static com.thoughtbend.ps.xmldemos.data.Const.Namespace.CUSTOMER;
 
 import java.io.IOException;
@@ -27,17 +26,17 @@ import com.thoughtbend.ps.xmldemos.data.Address;
 import com.thoughtbend.ps.xmldemos.data.Customer;
 import com.thoughtbend.ps.xmldemos.parser.ObjectPrinter;
 
-public class CustomerWithNamespaceDOMParser {
+public class CustomerWithSingleNamespaceDOMParser {
 
 	public static void main(String[] args) {
 		
-		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./demo03/customers.xml")) {
+		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./demo02/customers.xml")) {
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(true);
 			
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = schemaFactory.newSchema(ClassLoader.getSystemResource("./demo03/customer.xsd"));
+			Schema schema = schemaFactory.newSchema(ClassLoader.getSystemResource("./demo02/customer.xsd"));
 			
 			factory.setSchema(schema);
 			//factory.setValidating(true);
@@ -89,10 +88,6 @@ public class CustomerWithNamespaceDOMParser {
 				Element dataElement = (Element) dataNode;
 				boolean noMatch = false;
 				switch (dataElement.getLocalName()) {
-				/*case "id" :
-					Long idValue = Long.parseLong(dataElement.getTextContent());
-					newCustomer.setId(idValue);
-					break;*/
 				case "firstName" :
 					newCustomer.setFirstName(dataElement.getTextContent());
 					break;
@@ -109,7 +104,7 @@ public class CustomerWithNamespaceDOMParser {
 				
 				if (noMatch) {
 					
-					if (ADDRESS.equals(dataElement.getNamespaceURI()) && 
+					if (CUSTOMER.equals(dataElement.getNamespaceURI()) && 
 							"addresses".equals(dataElement.getLocalName())) {
 						
 						newCustomer.setAddresses(new ArrayList<>());
@@ -121,7 +116,7 @@ public class CustomerWithNamespaceDOMParser {
 							if (addressNode instanceof Element) {
 								
 								Element addressElement = (Element) addressNode;
-								if (ADDRESS.equals(dataElement.getNamespaceURI()) && 
+								if (CUSTOMER.equals(dataElement.getNamespaceURI()) && 
 										"address".equals(addressElement.getLocalName())) {
 									
 									newCustomer.getAddresses().add(buildAddressFromNode(addressElement));
