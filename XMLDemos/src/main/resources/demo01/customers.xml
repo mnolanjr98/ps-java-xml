@@ -8,6 +8,7 @@
 			<address>
 				<type>HOME</type>
 				<street>123 Acme Dr</street>
+				<unit xsi:nil="true" />
 				<city>Somewhere</city>
 				<state>IL</state>
 				<zip>60000</zip>
@@ -15,6 +16,7 @@
 			<address>
 				<type>OFFICE</type>
 				<street>456 Acme Way</street>
+				<unit xsi:nil="true" />
 				<city>Somewhere Else</city>
 				<state>IL</state>
 				<zip>60001</zip>
@@ -25,10 +27,5 @@
 		<firstName>Jim</firstName>
 		<lastName>Jones</lastName>
 		<email>jjones@psdemo.com</email>
-	</customer>
-	<customer id="125">
-		<firstName>Joe</firstName>
-		<lastName>Jones</lastName>
-		<email xsi:nil="true" />
 	</customer>
 </customers>
