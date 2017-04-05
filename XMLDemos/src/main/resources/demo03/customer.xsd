@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://www.thoughtbend.com/customer/v1"
+		xmlns:tbc="http://www.thoughtbend.com/customer/v1"
+		elementFormDefault="qualified">
+
+	<element name="customers">
+		<complexType>
+			<sequence>
+				<element name="customer" minOccurs="0" maxOccurs="unbounded" type="tbc:CustomerType" />
+			</sequence>
+		</complexType>
+	</element>
+	
+	<complexType name="CustomerType">
+		<sequence>
+			<element name="firstName" type="string" />
+			<element name="lastName" type="string" />
+			<element name="email" type="string" />
+			<element name="addresses" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="address" maxOccurs="unbounded" type="tbc:AddressType"/>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="id" type="long" use="required" />	
+	</complexType>
+
+	
+	<complexType name="AddressType">
+		<sequence>
+			<element name="type" type="string" />
+			<element name="street" type="string" />
+			<element name="unit" type="string" nillable="true" />
+			<!-- <element name="unit" type="string" minOccurs="0" /> -->
+			<element name="city" type="string" />
+			<element name="state" type="string" />
+			<element name="zip" type="string" />
+		</sequence>
+	</complexType>
+</schema>
