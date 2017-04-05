@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" 
 		targetNamespace="http://www.thoughtbend.com/customer/v1"
+		xmlns:tbc="http://www.thoughtbend.com/customer/v1"
 		xmlns:tba="http://www.thoughtbend.com/addr/v1"
 		elementFormDefault="qualified">
 		
@@ -9,18 +10,19 @@
 	<element name="customers">
 		<complexType>
 			<sequence>
-				<element name="customer" minOccurs="0" maxOccurs="unbounded">
-					<complexType>
-						<sequence>
-						<element name="firstName" type="string" />
-						<element name="lastName" type="string" />
-						<element name="email" type="string" />
-						<element ref="tba:addresses" minOccurs="0" />
-					</sequence>
-					<attribute name="id" type="long" use="required" />	
-					</complexType>
-				</element>
+				<element name="customer" minOccurs="0" maxOccurs="unbounded" type="tbc:CustomerType" />
 			</sequence>
 		</complexType>
 	</element>
+	
+	<complexType name="CustomerType">
+		<sequence>
+			<element name="firstName" type="string" />
+			<element name="lastName" type="string" />
+			<element name="email" type="string" />
+			<element ref="tba:addresses" minOccurs="0" />
+		</sequence>
+		<attribute name="id" type="long" use="required" />	
+	</complexType>
+	
 </schema>

@@ -31,13 +31,13 @@ public class CustomerWithMultipleNamespacesDOMParser {
 
 	public static void main(String[] args) {
 		
-		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./demo02/customers.xml")) {
+		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./demo04/customers.xml")) {
 			
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setNamespaceAware(true);
 			
 			SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-			Schema schema = schemaFactory.newSchema(ClassLoader.getSystemResource("./demo02/customer.xsd"));
+			Schema schema = schemaFactory.newSchema(ClassLoader.getSystemResource("./demo04/customer.xsd"));
 			
 			factory.setSchema(schema);
 			//factory.setValidating(true);
