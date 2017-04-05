@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+		targetNamespace="http://www.thoughtbend.com/customer/v1"
+		xmlns:tbc="http://www.thoughtbend.com/customer/v1"
+		xmlns:tba="http://www.thoughtbend.com/addr/v1"
+		elementFormDefault="qualified">
+		
+	<import namespace="http://www.thoughtbend.com/addr/v1" schemaLocation="./address.xsd" />
+
+	<element name="customers">
+		<complexType>
+			<sequence>
+				<element name="customer" minOccurs="0" maxOccurs="unbounded" type="tbc:CustomerType" />
+			</sequence>
+		</complexType>
+	</element>
+	
+	<complexType name="CustomerType">
+		<sequence>
+			<element name="firstName" type="tbc:FirstNameType" />
+			<element name="lastName">
+				<simpleType>
+					<restriction base="string">
+						<maxLength value="30" />
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="email" type="tbc:EmailType" />
+			<element ref="tba:addresses" minOccurs="0" />
+		</sequence>
+		<attribute name="id" type="tbc:IdType" use="required" />	
+	</complexType>
+	
+	<simpleType name="FirstNameType">
+		<restriction base="string">
+			<maxLength value="20" />
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="IdType">
+		<restriction base="long">
+			<totalDigits value="3" />
+		</restriction>
+	</simpleType>
+	
+	<simpleType name="EmailType">
+		<restriction base="string">
+			<pattern value="[^@]+@[^\.]+\..+" />
+		</restriction>
+	</simpleType>
+	
+</schema>
