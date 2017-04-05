@@ -37,4 +37,25 @@
 			</sequence>
 		</complexType>
 	</element>
+	
+	<!-- 
+	<element name="addresses">
+		<complexType>
+			<sequence>
+				<element name="address" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<element name="type" type="string" />
+							<element name="street" type="string" />
+							<element name="unit" type="string" nillable="true" />
+							<element name="city" type="string" />
+							<element name="state" type="string" />
+							<element name="zip" type="string" />
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+	-->
 </schema>
