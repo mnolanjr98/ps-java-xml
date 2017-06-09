@@ -14,7 +14,7 @@
 			</tba:address>
 			<tba:address>
 				<tba:type>OFFICE</tba:type>
-				<tba:street>456 Acme Way</tba:street>
+				<tba:street>456 Acme &amp; Way</tba:street>
 				<tba:city>Somewhere Else</tba:city>
 				<tba:state>IL</tba:state>
 				<tba:zip>60001</tba:zip>
