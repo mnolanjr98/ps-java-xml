@@ -83,9 +83,15 @@ public class CustomerXMLStAXEventParser {
 						break;
 					}
 				}
-				/*else if (Const.Namespace.ADDRESS.equals(elementName.getNamespaceURI())) {
-					Address address = buildAddressFromEvent(startElement, eventReader);
-				}*/
+				else if (Const.Namespace.ADDRESS.equals(elementName.getNamespaceURI())) {
+					if ("addresses".equals(elementName.getLocalPart())) {
+						newCustomer.setAddresses(new ArrayList<>());
+					}
+					else if ("address".equals(elementName.getLocalPart())) {
+						Address address = buildAddressFromEvent(startElement, eventReader);
+						newCustomer.getAddresses().add(address);
+					}
+				}
 			}
 			if (xmlEvent.isEndElement()) {
 				EndElement endElement = xmlEvent.asEndElement();
@@ -100,9 +106,52 @@ public class CustomerXMLStAXEventParser {
 		return newCustomer;
 	}
 
-	private static Address buildAddressFromEvent(StartElement startElement, XMLEventReader eventReader) {
-		// TODO Auto-generated method stub
-		return null;
+	private static Address buildAddressFromEvent(StartElement addressStartElement, XMLEventReader eventReader) throws XMLStreamException {
+		
+		Address newAddress = new Address();
+		
+		while (eventReader.hasNext()) {
+			
+			XMLEvent xmlEvent = eventReader.nextEvent();
+			
+			if (xmlEvent.isStartElement()) {
+				
+				StartElement startElement = xmlEvent.asStartElement();
+				QName elementName = startElement.getName();
+				
+				if (Const.Namespace.ADDRESS.equals(elementName.getNamespaceURI())) {
+					
+					switch (elementName.getLocalPart()) {
+					case "type":
+						newAddress.setAddressType(eventReader.getElementText());
+						break;
+					case "street":
+						newAddress.setStreet1(eventReader.getElementText());
+						break;
+					case "city":
+						newAddress.setCity(eventReader.getElementText());
+						break;
+					case "state":
+						newAddress.setState(eventReader.getElementText());
+						break;
+					case "zip":
+						newAddress.setZip(eventReader.getElementText());
+						break;
+					}
+				}
+			}
+			else if (xmlEvent.isEndElement()) {
+				
+				EndElement endElement = xmlEvent.asEndElement();
+				QName elementName = endElement.getName();
+				
+				if (Const.Namespace.ADDRESS.equals(elementName.getNamespaceURI()) && "address".equals(elementName.getLocalPart())) {
+					break;
+				}
+			}
+		}
+		
+		return newAddress;
 	}
 
 }
