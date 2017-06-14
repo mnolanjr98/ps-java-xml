@@ -28,6 +28,11 @@ public class CustomerXMLEventAPIParser {
 			
 			List<Customer> customerList = new ArrayList<>();
 			
+			eventReader.forEachRemaining((node) -> {
+				XMLEvent event = (XMLEvent) node;
+				
+			});
+			
 			while (eventReader.hasNext()) {
 				
 				// we are only peeking here, so we still need to call nextEvent to move the iterator forward
