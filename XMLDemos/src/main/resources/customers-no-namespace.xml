@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customers>
+	<customer id="123">
+		<firstName>Mike</firstName>
+		<lastName>Nolan</lastName>
+		<email>mnolan@thoughtbend.com</email>
+		<addresses>
+			<address>
+				<type>HOME</type>
+				<street>123 Acme Dr</street>
+				<city>Somewhere</city>
+				<state>IL</state>
+				<zip>60000</zip>
+			</address>
+			<address>
+				<type>OFFICE</type>
+				<street>456 Acme Way</street>
+				<city>Somewhere Else</city>
+				<state>IL</state>
+				<zip>60001</zip>
+			</address>
+		</addresses>
+	</customer>
+	<customer id="124">
+		<firstName>Jim</firstName>
+		<lastName>Jones</lastName>
+		<email>jjones@psdemo.com</email>
+	</customer>
+	<customer id="125">
+		<firstName>Mary</firstName>
+		<lastName>Nolan</lastName>
+		<email>manolan@anotherdomain.com</email>
+		<addresses>
+			<address>
+				<type>HOME</type>
+				<street>123 Acme Dr</street>
+				<city>Somewhere</city>
+				<state>IL</state>
+				<zip>60000</zip>
+			</address>
+		</addresses>
+	</customer>
+</customers>
