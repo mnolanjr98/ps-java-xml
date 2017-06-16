@@ -3,8 +3,10 @@ package com.thoughtbend.ps.xmldemos.parser.xpath2;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,6 +33,44 @@ public class CustomerConvertedToNamespaceXPathParsing {
 	final static XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
 	final static XPath XPATH = XPATH_FACTORY.newXPath();
 	
+	static {
+		XPATH.setNamespaceContext(new NamespaceContext() {
+			
+			@Override
+			public Iterator getPrefixes(String namespaceURI) {
+				// Use if namespace mapped to multiple prefixes
+				return null;
+			}
+			
+			@Override
+			public String getPrefix(String namespaceURI) {
+				String prefix = "";
+				if (Const.Namespace.CUSTOMER.equals(namespaceURI)) {
+					prefix = "tbc";
+				}
+				else if (Const.Namespace.ADDRESS.equals(namespaceURI)) {
+					prefix = "tba";
+				}
+				
+				return prefix;
+			}
+			
+			@Override
+			public String getNamespaceURI(String prefix) {
+				String namespace = "";
+				
+				if ("tbc".equals(prefix)) {
+					namespace = Const.Namespace.CUSTOMER;
+				}
+				else if ("tba".equals(prefix)) {
+					namespace = Const.Namespace.ADDRESS;
+				}
+				
+				return namespace;
+			}
+		});
+	}
+	
 	// Customer field expressions
 	final static XPathExpression CUSTOMER_ID_EXPR;
 	final static XPathExpression CUSTOMER_FIRST_NAME_EXPR;
@@ -42,11 +82,11 @@ public class CustomerConvertedToNamespaceXPathParsing {
 		try {
 			// Remember, these are all relative to the current node being evaluated
 			CUSTOMER_ID_EXPR = XPATH.compile("@id");
-			CUSTOMER_FIRST_NAME_EXPR = XPATH.compile("firstName");
-			CUSTOMER_LAST_NAME_EXPR = XPATH.compile("lastName");
-			CUSTOMER_EMAIL_EXPR = XPATH.compile("email");
+			CUSTOMER_FIRST_NAME_EXPR = XPATH.compile("tbc:firstName");
+			CUSTOMER_LAST_NAME_EXPR = XPATH.compile("tbc:lastName");
+			CUSTOMER_EMAIL_EXPR = XPATH.compile("tbc:email");
 			
-			CUSTOMER_ADDRESSES_NODE_EXPR = XPATH.compile("addresses");
+			CUSTOMER_ADDRESSES_NODE_EXPR = XPATH.compile("tba:addresses");
 		}
 		catch (XPathExpressionException ex) {
 			ex.printStackTrace(System.err);
@@ -64,11 +104,11 @@ public class CustomerConvertedToNamespaceXPathParsing {
 	static {
 		
 		try {
-			ADDRESS_TYPE_EXPR = XPATH.compile("type");
-			ADDRESS_STREET_EXPR = XPATH.compile("street");
-			ADDRESS_CITY_EXPR = XPATH.compile("city");
-			ADDRESS_STATE_EXPR = XPATH.compile("state");
-			ADDRESS_ZIP_EXPR = XPATH.compile("zip");
+			ADDRESS_TYPE_EXPR = XPATH.compile("tba:type");
+			ADDRESS_STREET_EXPR = XPATH.compile("tba:street");
+			ADDRESS_CITY_EXPR = XPATH.compile("tba:city");
+			ADDRESS_STATE_EXPR = XPATH.compile("tba:state");
+			ADDRESS_ZIP_EXPR = XPATH.compile("tba:zip");
 		}
 		catch (XPathExpressionException ex) {
 			ex.printStackTrace(System.err);
@@ -88,7 +128,7 @@ public class CustomerConvertedToNamespaceXPathParsing {
 
 			List<Customer> customerList = new ArrayList<>();
 			
-			XPathExpression customersExpression = XPATH.compile("/customers/customer");
+			XPathExpression customersExpression = XPATH.compile("/tbc:customers/tbc:customer");
 			NodeList customerNodeList = (NodeList) customersExpression.evaluate(document, XPathConstants.NODESET);
 			// End
 
