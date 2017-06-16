@@ -8,6 +8,11 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,7 +39,13 @@ public class CustomerNoNamespaceXPathParsing {
 
 			List<Customer> customerList = new ArrayList<>();
 
-			NodeList customerNodeList = document.getElementsByTagName("customer");
+			// This does the same with a whole lot more code
+			XPathFactory xpathFactory = XPathFactory.newInstance();
+			XPath xpath = xpathFactory.newXPath();
+			
+			XPathExpression customersExpression = xpath.compile("/customers/customer");
+			NodeList customerNodeList = (NodeList) customersExpression.evaluate(document, XPathConstants.NODESET);
+			// End
 
 			for (int customerIndex = 0; customerIndex < customerNodeList.getLength(); ++customerIndex) {
 
@@ -46,7 +57,7 @@ public class CustomerNoNamespaceXPathParsing {
 				ObjectPrinter.printCustomer(currentCustomer);
 			}
 
-		} catch (IOException | ParserConfigurationException | SAXException ex) {
+		} catch (IOException | ParserConfigurationException | SAXException | XPathExpressionException ex) {
 			ex.printStackTrace(System.err);
 		}
 	}
