@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,6 +56,8 @@ public class CustomerWithNamespaceXPathParsingStartingState {
 
 		Customer newCustomer = new Customer();
 		NodeList customerDataNodeList = customerNode.getChildNodes();
+		Attr attribute = (Attr) customerNode.getAttributes().getNamedItem("id");
+		newCustomer.setId(Long.parseLong(attribute.getValue()));
 
 		for (int dataIndex = 0; dataIndex < customerDataNodeList.getLength(); ++dataIndex) {
 
@@ -64,9 +67,6 @@ public class CustomerWithNamespaceXPathParsingStartingState {
 				Element dataElement = (Element) dataNode;
 				boolean noMatch = false;
 				switch (dataElement.getLocalName()) {
-				case "id":
-					newCustomer.setId(Long.parseLong(dataElement.getTextContent()));
-					break;
 				case "firstName":
 					newCustomer.setFirstName(dataElement.getTextContent());
 					break;
