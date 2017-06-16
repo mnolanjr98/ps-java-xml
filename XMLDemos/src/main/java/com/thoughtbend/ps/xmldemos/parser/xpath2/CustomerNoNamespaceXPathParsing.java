@@ -141,7 +141,11 @@ public class CustomerNoNamespaceXPathParsing {
 
 		Address address = new Address();
 		
-		
+		address.setAddressType((String) ADDRESS_TYPE_EXPR.evaluate(addressNode, XPathConstants.STRING));
+		address.setStreet1((String) ADDRESS_STREET_EXPR.evaluate(addressNode, XPathConstants.STRING));
+		address.setCity((String) ADDRESS_CITY_EXPR.evaluate(addressNode, XPathConstants.STRING));
+		address.setState((String) ADDRESS_STATE_EXPR.evaluate(addressNode, XPathConstants.STRING));
+		address.setZip((String) ADDRESS_ZIP_EXPR.evaluate(addressNode, XPathConstants.STRING));
 
 		return address;
 	}
