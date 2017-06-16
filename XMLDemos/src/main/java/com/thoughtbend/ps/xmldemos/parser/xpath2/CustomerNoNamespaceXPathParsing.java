@@ -14,6 +14,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,6 +27,54 @@ import com.thoughtbend.ps.xmldemos.parser.ObjectPrinter;
 import com.thoughtbend.ps.xmldemos.parser.sax.Const;
 
 public class CustomerNoNamespaceXPathParsing {
+	
+	final static XPathFactory XPATH_FACTORY = XPathFactory.newInstance();
+	final static XPath XPATH = XPATH_FACTORY.newXPath();
+	
+	// Customer field expressions
+	final static XPathExpression CUSTOMER_ID_EXPR;
+	final static XPathExpression CUSTOMER_FIRST_NAME_EXPR;
+	final static XPathExpression CUSTOMER_LAST_NAME_EXPR;
+	final static XPathExpression CUSTOMER_EMAIL_EXPR;
+	final static XPathExpression CUSTOMER_ADDRESSES_NODE_EXPR;
+	
+	static {
+		try {
+			// Remember, these are all relative to the current node being evaluated
+			CUSTOMER_ID_EXPR = XPATH.compile("@id");
+			CUSTOMER_FIRST_NAME_EXPR = XPATH.compile("firstName");
+			CUSTOMER_LAST_NAME_EXPR = XPATH.compile("lastName");
+			CUSTOMER_EMAIL_EXPR = XPATH.compile("email");
+			
+			CUSTOMER_ADDRESSES_NODE_EXPR = XPATH.compile("addresses");
+		}
+		catch (XPathExpressionException ex) {
+			ex.printStackTrace(System.err);
+			throw new RuntimeException("Invalid state - could not compile XPath Expressions");
+		}
+	}
+	
+	// Address field expressions
+	final static XPathExpression ADDRESS_TYPE_EXPR;
+	final static XPathExpression ADDRESS_STREET_EXPR;
+	final static XPathExpression ADDRESS_CITY_EXPR;
+	final static XPathExpression ADDRESS_STATE_EXPR;
+	final static XPathExpression ADDRESS_ZIP_EXPR;
+	
+	static {
+		
+		try {
+			ADDRESS_TYPE_EXPR = XPATH.compile("type");
+			ADDRESS_STREET_EXPR = XPATH.compile("street");
+			ADDRESS_CITY_EXPR = XPATH.compile("city");
+			ADDRESS_STATE_EXPR = XPATH.compile("state");
+			ADDRESS_ZIP_EXPR = XPATH.compile("zip");
+		}
+		catch (XPathExpressionException ex) {
+			ex.printStackTrace(System.err);
+			throw new RuntimeException("Invalid state - could not compile XPath Expressions");
+		}
+	}
 
 	public static void main(String[] args) {
 		try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("./customers-no-namespace.xml")) {
@@ -38,12 +87,8 @@ public class CustomerNoNamespaceXPathParsing {
 			Document document = builder.parse(inputStream);
 
 			List<Customer> customerList = new ArrayList<>();
-
-			// This does the same with a whole lot more code
-			XPathFactory xpathFactory = XPathFactory.newInstance();
-			XPath xpath = xpathFactory.newXPath();
 			
-			XPathExpression customersExpression = xpath.compile("/customers/customer[@id=123]");
+			XPathExpression customersExpression = XPATH.compile("/customers/customer");
 			NodeList customerNodeList = (NodeList) customersExpression.evaluate(document, XPathConstants.NODESET);
 			// End
 
@@ -62,52 +107,29 @@ public class CustomerNoNamespaceXPathParsing {
 		}
 	}
 
-	private static Customer buildCustomerFromNode(Node customerNode) {
+	private static Customer buildCustomerFromNode(Node customerNode) throws XPathExpressionException {
 
 		Customer newCustomer = new Customer();
-		NodeList customerDataNodeList = customerNode.getChildNodes();
+		// We no longer need the child node list
+		
+		String idValue = (String) CUSTOMER_ID_EXPR.evaluate(customerNode, XPathConstants.STRING);
+		newCustomer.setId(Long.parseLong(idValue));
+		
+		newCustomer.setFirstName((String) CUSTOMER_FIRST_NAME_EXPR.evaluate(customerNode, XPathConstants.STRING)); 
+		newCustomer.setLastName((String) CUSTOMER_LAST_NAME_EXPR.evaluate(customerNode, XPathConstants.STRING));
+		newCustomer.setEmailAddress((String) CUSTOMER_EMAIL_EXPR.evaluate(customerNode, XPathConstants.STRING));
+		
+		Node addressesNode = (Node) CUSTOMER_ADDRESSES_NODE_EXPR.evaluate(customerNode, XPathConstants.NODE);
+		
+		if (addressesNode != null) {
+			
+			newCustomer.setAddresses(new ArrayList<>());
 
-		for (int dataIndex = 0; dataIndex < customerDataNodeList.getLength(); ++dataIndex) {
-
-			Node dataNode = customerDataNodeList.item(dataIndex);
-			if (dataNode instanceof Element) {
-
-				Element dataElement = (Element) dataNode;
-				boolean noMatch = false;
-				switch (dataElement.getLocalName()) {
-				case "id":
-					newCustomer.setId(Long.parseLong(dataElement.getTextContent()));
-					break;
-				case "firstName":
-					newCustomer.setFirstName(dataElement.getTextContent());
-					break;
-				case "lastName":
-					newCustomer.setLastName(dataElement.getTextContent());
-					break;
-				case "email":
-					newCustomer.setEmailAddress(dataElement.getTextContent());
-					break;
-				default:
-					noMatch = true;
-					break;
-				}
-
-				if (noMatch) {
-					// These elements are in a different name space, so we need
-					// to include that in our checks
-					if ("addresses".equals(dataElement.getLocalName())) {
-
-						newCustomer.setAddresses(new ArrayList<>());
-
-						NodeList addressNodeList = dataElement.getChildNodes();
-						for (int addressIndex = 0; addressIndex < addressNodeList.getLength(); ++addressIndex) {
-							Node addressNode = addressNodeList.item(addressIndex);
-							if (addressNode instanceof Element && "address".equals(addressNode.getLocalName())) {
-								newCustomer.getAddresses().add(buildAddressFromNode(addressNode));
-							}
-						}
-					}
-					noMatch = false;
+			NodeList addressNodeList = addressesNode.getChildNodes();
+			for (int addressIndex = 0; addressIndex < addressNodeList.getLength(); ++addressIndex) {
+				Node addressNode = addressNodeList.item(addressIndex);
+				if (addressNode instanceof Element && "address".equals(addressNode.getLocalName())) {
+					newCustomer.getAddresses().add(buildAddressFromNode(addressNode));
 				}
 			}
 		}
@@ -115,36 +137,11 @@ public class CustomerNoNamespaceXPathParsing {
 		return newCustomer;
 	}
 
-	private static Address buildAddressFromNode(Node addressNode) {
+	private static Address buildAddressFromNode(Node addressNode) throws XPathExpressionException {
 
 		Address address = new Address();
-		NodeList addressDataNodeList = addressNode.getChildNodes();
-
-		for (int addressDataIndex = 0; addressDataIndex < addressDataNodeList.getLength(); ++addressDataIndex) {
-
-			Node dataNode = addressDataNodeList.item(addressDataIndex);
-			if (dataNode instanceof Element) {
-
-				Element dataElement = (Element) dataNode;
-				switch (dataElement.getLocalName()) {
-				case "type":
-					address.setAddressType(dataElement.getTextContent());
-					break;
-				case "street":
-					address.setStreet1(dataElement.getTextContent());
-					break;
-				case "city":
-					address.setCity(dataElement.getTextContent());
-					break;
-				case "state":
-					address.setState(dataElement.getTextContent());
-					break;
-				case "zip":
-					address.setZip(dataElement.getTextContent());
-					break;
-				}
-			}
-		}
+		
+		
 
 		return address;
 	}
