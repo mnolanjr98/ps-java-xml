@@ -112,12 +112,12 @@ public class CustomerNoNamespaceXPathParsing {
 		Customer newCustomer = new Customer();
 		// We no longer need the child node list
 		
-		String idValue = (String) CUSTOMER_ID_EXPR.evaluate(customerNode, XPathConstants.STRING);
+		String idValue = fetchStringValue(customerNode, CUSTOMER_ID_EXPR);
 		newCustomer.setId(Long.parseLong(idValue));
 		
-		newCustomer.setFirstName((String) CUSTOMER_FIRST_NAME_EXPR.evaluate(customerNode, XPathConstants.STRING)); 
-		newCustomer.setLastName((String) CUSTOMER_LAST_NAME_EXPR.evaluate(customerNode, XPathConstants.STRING));
-		newCustomer.setEmailAddress((String) CUSTOMER_EMAIL_EXPR.evaluate(customerNode, XPathConstants.STRING));
+		newCustomer.setFirstName(fetchStringValue(customerNode, CUSTOMER_FIRST_NAME_EXPR)); 
+		newCustomer.setLastName(fetchStringValue(customerNode, CUSTOMER_LAST_NAME_EXPR));
+		newCustomer.setEmailAddress(fetchStringValue(customerNode, CUSTOMER_EMAIL_EXPR));
 		
 		Node addressesNode = (Node) CUSTOMER_ADDRESSES_NODE_EXPR.evaluate(customerNode, XPathConstants.NODE);
 		
@@ -141,13 +141,18 @@ public class CustomerNoNamespaceXPathParsing {
 
 		Address address = new Address();
 		
-		address.setAddressType((String) ADDRESS_TYPE_EXPR.evaluate(addressNode, XPathConstants.STRING));
-		address.setStreet1((String) ADDRESS_STREET_EXPR.evaluate(addressNode, XPathConstants.STRING));
-		address.setCity((String) ADDRESS_CITY_EXPR.evaluate(addressNode, XPathConstants.STRING));
-		address.setState((String) ADDRESS_STATE_EXPR.evaluate(addressNode, XPathConstants.STRING));
-		address.setZip((String) ADDRESS_ZIP_EXPR.evaluate(addressNode, XPathConstants.STRING));
+		address.setAddressType(fetchStringValue(addressNode, ADDRESS_TYPE_EXPR));
+		address.setStreet1(fetchStringValue(addressNode, ADDRESS_STREET_EXPR));
+		address.setCity(fetchStringValue(addressNode, ADDRESS_CITY_EXPR));
+		address.setState(fetchStringValue(addressNode, ADDRESS_STATE_EXPR));
+		address.setZip(fetchStringValue(addressNode, ADDRESS_ZIP_EXPR));
 
 		return address;
+	}
+	
+	private static String fetchStringValue(Node node, XPathExpression expression) throws XPathExpressionException {
+		
+		return (String) expression.evaluate(node, XPathConstants.STRING);
 	}
 
 }
