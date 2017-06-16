@@ -35,8 +35,8 @@
 				<type>HOME</type>
 				<street>123 Acme Dr</street>
 				<city>Somewhere</city>
-				<state>IL</state>
-				<zip>60000</zip>
+				<state>WI</state>
+				<zip>53100</zip>
 			</address>
 		</addresses>
 	</customer>

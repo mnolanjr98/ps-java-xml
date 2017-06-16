@@ -36,8 +36,8 @@
 				<tba:type>HOME</tba:type>
 				<tba:street>123 Acme Dr</tba:street>
 				<tba:city>Somewhere</tba:city>
-				<tba:state>IL</tba:state>
-				<tba:zip>60000</tba:zip>
+				<tba:state>WI</tba:state>
+				<tba:zip>53100</tba:zip>
 			</tba:address>
 		</tba:addresses>
 	</tbc:customer>
