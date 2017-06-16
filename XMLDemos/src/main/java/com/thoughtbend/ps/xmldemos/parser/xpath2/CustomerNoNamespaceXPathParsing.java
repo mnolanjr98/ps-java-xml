@@ -43,7 +43,7 @@ public class CustomerNoNamespaceXPathParsing {
 			XPathFactory xpathFactory = XPathFactory.newInstance();
 			XPath xpath = xpathFactory.newXPath();
 			
-			XPathExpression customersExpression = xpath.compile("/customers/customer[lastName='Nolan']");
+			XPathExpression customersExpression = xpath.compile("/customers/customer/addresses/address[city='Somewhere Else']");
 			NodeList customerNodeList = (NodeList) customersExpression.evaluate(document, XPathConstants.NODESET);
 			// End
 
