@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<customers xmlns="http://www.thoughtbend.com/customer/v1"
+	xmlns:ns2="http://www.thoughtbend.com/addr/v1">
+	<customer id="123">
+		<firstName>Mike</firstName>
+		<lastName>Nolan</lastName>
+		<email>mnolan@thoughtbend.com</email>
+		<ns2:addresses>
+			<ns2:address>
+				<ns2:type>HOME</ns2:type>
+				<ns2:street>123 Acme Dr</ns2:street>
+				<ns2:unit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					xsi:nil="true" />
+				<ns2:city>Somewhere</ns2:city>
+				<ns2:state>IL</ns2:state>
+				<ns2:zip>60000</ns2:zip>
+			</ns2:address>
+			<ns2:address>
+				<ns2:type>OFFICE</ns2:type>
+				<ns2:street>456 Acme Way</ns2:street>
+				<ns2:unit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					xsi:nil="true" />
+				<ns2:city>Somewhere Else</ns2:city>
+				<ns2:state>IL</ns2:state>
+				<ns2:zip>60001</ns2:zip>
+			</ns2:address>
+		</ns2:addresses>
+	</customer>
+	<customer id="124">
+		<firstName>Jim</firstName>
+		<lastName>Nolan</lastName>
+		<email>jjones@psdemo.com</email>
+	</customer>
+	<customer id="125">
+		<firstName>Mary</firstName>
+		<lastName>Nolan</lastName>
+		<email>manolan@anotherdomain.com</email>
+		<ns2:addresses>
+			<ns2:address>
+				<ns2:type>HOME</ns2:type>
+				<ns2:street>123 Acme Dr</ns2:street>
+				<ns2:unit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					xsi:nil="true" />
+				<ns2:city>Somewhere</ns2:city>
+				<ns2:state>WI</ns2:state>
+				<ns2:zip>53100</ns2:zip>
+			</ns2:address>
+		</ns2:addresses>
+	</customer>
+</customers>
