@@ -27,18 +27,4 @@
 		<tbc:lastName>Jones</tbc:lastName>
 		<tbc:email>jjones@psdemo.com</tbc:email>
 	</tbc:customer>
-	<tbc:customer id="125">
-		<tbc:firstName>Mary</tbc:firstName>
-		<tbc:lastName>Nolan</tbc:lastName>
-		<tbc:email>manolan@anotherdomain.com</tbc:email>
-		<tba:addresses>
-			<tba:address>
-				<tba:type>HOME</tba:type>
-				<tba:street>123 Acme Dr</tba:street>
-				<tba:city>Somewhere</tba:city>
-				<tba:state>WI</tba:state>
-				<tba:zip>53100</tba:zip>
-			</tba:address>
-		</tba:addresses>
-	</tbc:customer>
 </tbc:customers>

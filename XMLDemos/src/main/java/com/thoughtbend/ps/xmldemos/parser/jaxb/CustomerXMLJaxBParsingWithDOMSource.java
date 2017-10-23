@@ -21,6 +21,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
@@ -91,8 +92,15 @@ public class CustomerXMLJaxBParsingWithDOMSource {
 				}
 			});
 			
+			Node myNode = (Node) xpath.evaluate("/tbc:customers/tbc:customer[@id=123]/tba:addresses/tba:address", document, XPathConstants.NODE);
+			System.out.println(myNode.getNodeName());
+			//String firstName = (String) xpath.evaluate("street", myNode, XPathConstants.STRING);
+			Node myParentNode = (Node) xpath.evaluate("child::tba:street", myNode, XPathConstants.NODE);
+			System.out.println(myParentNode.getTextContent());
+			XPathExpression expression = xpath.compile("/customers");
+			expression.evaluate(document, XPathConstants.NODESET);
 			// 3.
-			NodeList subNodeList = (NodeList) xpath.evaluate("/tbc:customers/tbc:customer[tbc:lastName='Nolan']", document, XPathConstants.NODESET);
+			NodeList subNodeList = (NodeList) xpath.evaluate("/tbc:customers/tbc:customer[1]", document, XPathConstants.NODESET);
 			
 			// 4. Prepare JAXB for unmarshalling
 			// You MUST be specific about the root element or type you plan to use
